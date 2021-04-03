@@ -6,33 +6,28 @@ namespace App\Util;
 
 class Helper
 {
-
     /**
      * @param string $filename
      * @param string $delimiter
      *
      * @return array|false
      */
-    public static function csvToArray($filePath = '', $delimiter = ',') : array
+    public static function ConvertCsvToArray($filePath = '', $array=array('delimiter' => ',')) : array
     {
-        if (!file_exists($filePath) || !is_readable($filename)) {
+        if (!file_exists($filePath) || !is_readable($filePath)) {
             return false;
         }
 
-        $header = null;
-        $data = [];
-        if (($handle = fopen($filePath, 'r')) !== false) {
-            while (($row = fgetcsv($handle, 1000, $delimiter)) !== false) {
-                if (!$header) {
-                    $header = $row;
-                } else {
-                    $data[] = array_combine($header, $row);
-                }
-            }
-            fclose($handle);
-        }
+        $csvData = array();
+        $file_handle = fopen($filePath, 'r');
+        while (!feof($file_handle)) {
 
-        return $data;
+            $csvData[] = fgetcsv($file_handle, 0, $array['delimiter']);
+
+        }
+        fclose($file_handle);
+
+        return $csvData;
     }
 
 }
